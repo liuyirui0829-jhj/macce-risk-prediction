@@ -1,19 +1,19 @@
+
 import os
 import joblib
 import pandas as pd
 import streamlit as st
 
 # ==========================================
-# 1. 页面设置
+# 1. Page configuration
 # ==========================================
 st.set_page_config(
     page_title="ACS MACCE Risk Prediction",
     page_icon="❤️",
     layout="wide"
 )
-
 # ==========================================
-# 2. 自定义页面样式
+# 2. Custom CSS
 # ==========================================
 st.markdown(
     """
@@ -21,7 +21,6 @@ st.markdown(
     .main {
         background-color: #f8fafc;
     }
-
     .title-box {
         background: linear-gradient(90deg, #8B0000, #B22222);
         padding: 28px;
@@ -30,17 +29,14 @@ st.markdown(
         text-align: center;
         margin-bottom: 25px;
     }
-
     .title-box h1 {
         font-size: 34px;
         margin-bottom: 8px;
     }
-
     .title-box p {
         font-size: 17px;
         margin-bottom: 0px;
     }
-
     .section-card {
         background-color: white;
         padding: 22px;
@@ -48,74 +44,77 @@ st.markdown(
         box-shadow: 0px 4px 14px rgba(0,0,0,0.06);
         margin-bottom: 18px;
     }
-    
+
     .result-card {
-    background-color: white;
-    padding: 28px 30px;
-    border-radius: 18px;
-    box-shadow: 0px 4px 16px rgba(0,0,0,0.08);
-    margin-top: 15px;
-    text-align: center;
-    height: 300px;
-    display: grid;
-    grid-template-rows: 60px 110px 80px;
-    align-items: center;
-}
+        background-color: white;
+        padding: 28px 30px;
+        border-radius: 18px;
+        box-shadow: 0px 4px 16px rgba(0,0,0,0.08);
+        margin-top: 15px;
+        text-align: center;
+        height: 300px;
+        display: grid;
+        grid-template-rows: 60px 110px 80px;
+        align-items: center;
+    }
+    .result-title {
+        font-size: 24px;
+        color: #4b5563;
+        font-weight: 700;
+        margin: 0;
+    }
+    .probability-text {
+        font-size: 64px;
+        font-weight: 800;
+        color: #111827;
+        line-height: 1;
+        margin: 0;
+    }
+    .risk-low {
+        color: #15803d;
+        font-size: 64px;
+        font-weight: 800;
+        line-height: 1;
+        margin: 0;
+    }
+    .risk-medium {
+        color: #d97706;
+        font-size: 64px;
+        font-weight: 800;
+        line-height: 1;
+        margin: 0;
+    }
+    .risk-high {
+        color: #b91c1c;
+        font-size: 64px;
+        font-weight: 800;
+        line-height: 1;
+        margin: 0;
+    }
+    .result-desc {
+        font-size: 18px;
+        color: #6b7280;
+        line-height: 1.6;
+        font-weight: 600;
+        margin: 0;
+    }
 
-.result-title {
-    font-size: 24px;
-    color: #4b5563;
-    font-weight: 700;
-    margin: 0;
-}
-
-.probability-text {
-    font-size: 64px;
-    font-weight: 800;
-    color: #111827;
-    line-height: 1;
-    margin: 0;
-}
-
-.risk-low {
-    color: #15803d;
-    font-size: 64px;
-    font-weight: 800;
-    line-height: 1;
-    margin: 0;
-}
-
-.risk-medium {
-    color: #d97706;
-    font-size: 64px;
-    font-weight: 800;
-    line-height: 1;
-    margin: 0;
-}
-
-.risk-high {
-    color: #b91c1c;
-    font-size: 64px;
-    font-weight: 800;
-    line-height: 1;
-    margin: 0;
-}
-
-.result-desc {
-    font-size: 18px;
-    color: #6b7280;
-    line-height: 1.6;
-    font-weight: 600;
-    margin: 0;
-}
-    
-    
     .small-note {
         font-size: 13px;
         color: #6b7280;
         line-height: 1.6;
     }
-
+    .definition-box {
+        background-color: #f9fafb;
+        border-left: 5px solid #991b1b;
+        border-right: 5px solid #991b1b;
+        padding: 18px 35px;
+        border-radius: 12px;
+        margin-bottom: 26px;
+        font-size: 16px;
+        line-height: 1.7;
+        color: #374151;
+    }
     .footer-box {
         background-color: #fff7ed;
         border-left: 5px solid #f97316;
@@ -127,25 +126,33 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 # ==========================================
-# 3. 标题区
+# 3. Header
 # ==========================================
 st.markdown(
     """
     <div class="title-box">
-        <h1>ACS住院期间MACCE风险预测工具</h1>
-        <p>基于 CatBoost 模型的机器学习预测系统</p>
+        <h1>In-hospital MACCE Risk Prediction Tool for ACS Patients</h1>
+        <p>A machine learning prediction system based on the CatBoost model</p>
     </div>
     """,
     unsafe_allow_html=True
 )
-
+st.markdown(
+    """
+    <div class="definition-box">
+        <b>Definition of MACCE:</b>
+        In-hospital major adverse cardiac and cerebrovascular events (MACCE) 
+        were defined as a composite of all-cause death, recurrent myocardial infarction, 
+        acute thrombosis, acute heart failure, and stroke.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 # ==========================================
-# 4. 路径与变量
+# 4. Paths and variables
 # ==========================================
 MODEL_PATH = "saved_models/Model_5_11_Features_-_CatBoost.joblib"
-
 MODEL5_FEATURES = [
     "AHF",
     "LVEF",
@@ -160,8 +167,9 @@ MODEL5_FEATURES = [
     "Cardiogenic shock"
 ]
 
+
 # ==========================================
-# 5. 加载模型
+# 5. Load model
 # ==========================================
 @st.cache_resource
 def load_model():
@@ -174,148 +182,136 @@ def load_model():
 try:
     pipeline, train_cols = load_model()
 except Exception as e:
-    st.error("模型加载失败，请检查模型文件路径或 joblib 文件结构。")
+    st.error("Failed to load the model. Please check the model file path or the joblib file structure.")
     st.exception(e)
     st.stop()
-
 # ==========================================
-# 6. 侧边栏说明
+# 6. Sidebar
 # ==========================================
 with st.sidebar:
-    st.header("模型信息")
-    st.write("**特征数量：** 11")
-    st.write("**算法：** CatBoost")
-    st.write("**预测结局：** 住院期间 MACCE")
-    st.write("**输出结果：** MACCE 发生概率")
-
+    st.header("Model Information")
+    st.write("**Number of features:** 11")
+    st.write("**Algorithm:** CatBoost")
+    st.write("**Predicted outcome:** In-hospital MACCE")
+    st.write("**Output:** Probability of MACCE")
     st.divider()
-
-    st.header("风险分层规则")
-    st.write("低危：预测概率 < 10%")
-    st.write("中危：10% ≤ 预测概率 < 30%")
-    st.write("高危：预测概率 ≥ 30%")
-
+    st.header("Risk Stratification")
+    st.write("Low risk: predicted probability < 2.0392%")
+    st.write("Intermediate risk: 2.0392% ≤ predicted probability < 8.1862%")
+    st.write("High risk: predicted probability ≥ 8.1862%")
     st.divider()
-
     st.caption(
-        "注：风险分层阈值目前为展示用规则。正式论文中建议根据训练集、验证集或临床决策需求确定。"
+        "Note: The risk stratification thresholds were determined based on the distribution "
+        "of predicted probabilities in the training set and are applied for risk presentation "
+        "in this web application."
     )
-
 # ==========================================
-# 7. 输入区
+# 7. Input section
 # ==========================================
-st.subheader("请输入患者临床指标")
-
+st.subheader("Enter Patient Clinical Variables")
 # ------------------------------
-# 7.1 基本信息与连续变量
+# 7.1 Basic information and continuous variables
 # ------------------------------
-st.markdown("### 基本信息与连续变量")
-
+st.markdown("### Basic Information and Continuous Variables")
 basic_col1, basic_col2, basic_col3 = st.columns(3)
-
 with basic_col1:
     Age = st.number_input(
-        "年龄 Age",
+        "Age, years",
         min_value=18,
         max_value=120,
         value=65,
-        step=1
+        step=1,
+        help="Patient age in years."
     )
-
 with basic_col2:
     LVEF = st.number_input(
-        "左室射血分数 LVEF (%)",
+        "Left ventricular ejection fraction, %",
         min_value=1.0,
         max_value=100.0,
         value=55.0,
         step=1.0,
-        format="%.2f"
+        format="%.2f",
+        help="Left ventricular ejection fraction, expressed as a percentage."
     )
-
 with basic_col3:
     FBG = st.number_input(
-        "空腹血糖 FBG",
+        "Fasting blood glucose, mmol/L",
         min_value=0.0,
         max_value=50.0,
         value=5.6,
         step=0.1,
-        format="%.1f"
+        format="%.1f",
+        help="Fasting blood glucose, measured in mmol/L."
     )
-
 basic_col4, basic_col5, basic_col6 = st.columns(3)
-
 with basic_col4:
     aSI = st.number_input(
-        "年龄休克指数 aSI",
+        "Age-adjusted shock index",
         min_value=0.0,
         max_value=5.0,
         value=0.70,
         step=0.01,
-        format="%.2f"
+        format="%.2f",
+        help="Age-adjusted shock index, an index-type variable."
     )
-
 with basic_col5:
     AIP = st.number_input(
-        "动脉粥样硬化指数 AIP",
+        "Atherogenic index of plasma",
         min_value=-5.0,
         max_value=5.0,
         value=0.20,
         step=0.01,
-        format="%.2f"
+        format="%.2f",
+        help="Atherogenic index of plasma, usually calculated from lipid parameters and treated as a unitless index."
     )
-
 with basic_col6:
     eGFR = st.selectbox(
-        "eGFR 分组",
+        "eGFR group, mL/min/1.73 m²",
         options=["<30", "30-60", "60-90", ">90"],
-        index=2
+        index=2,
+        help="Estimated glomerular filtration rate group, measured in mL/min/1.73 m²."
     )
-
 st.markdown("<br>", unsafe_allow_html=True)
-
 # ------------------------------
-# 7.2 临床状态与治疗变量
+# 7.2 Clinical status and treatment variables
 # ------------------------------
-st.markdown("### 临床状态与治疗变量")
-
+st.markdown("### Clinical Status and Treatment Variables")
 clinical_col1, clinical_col2, clinical_col3 = st.columns(3)
-
 with clinical_col1:
     AHF = st.selectbox(
-        "急性心力衰竭 AHF",
-        options=["No", "Yes"]
+        "Acute heart failure",
+        options=["No", "Yes"],
+        help="Whether acute heart failure was present."
     )
-
 with clinical_col2:
     Killip_class = st.selectbox(
         "Killip class",
-        options=["I", "II", "III", "IV"]
+        options=["I", "II", "III", "IV"],
+        help="Killip classification, ranging from I to IV."
     )
-
 with clinical_col3:
     Aldosterone = st.selectbox(
-        "住院期间使用醛固酮受体拮抗剂",
-        options=["No", "Yes"]
+        "In-hospital MRA use",
+        options=["No", "Yes"],
+        help="Whether mineralocorticoid receptor antagonists, also known as aldosterone receptor antagonists, were used during hospitalization."
     )
-
 clinical_col4, clinical_col5, clinical_col6 = st.columns(3)
-
 with clinical_col4:
     ST_deviation = st.selectbox(
-        "ST段偏移",
-        options=["No", "Yes"]
+        "ST-segment deviation",
+        options=["No", "Yes"],
+        help="Whether ST-segment elevation or depression was present."
     )
-
 with clinical_col5:
     Shock = st.selectbox(
-        "心源性休克 Cardiogenic shock",
-        options=["No", "Yes"]
+        "Cardiogenic shock",
+        options=["No", "Yes"],
+        help="Whether cardiogenic shock was present."
     )
-
 with clinical_col6:
     st.empty()
 # ==========================================
-# 8. 生成输入 DataFrame
+# 8. Generate input DataFrame
 # ==========================================
 input_df = pd.DataFrame({
     "AHF": [AHF],
@@ -331,70 +327,108 @@ input_df = pd.DataFrame({
     "Cardiogenic shock": [Shock]
 })
 
+
 # ==========================================
-# 9. 预测函数
+# 9. Prediction functions
 # ==========================================
 def predict_macce_probability(input_df, pipeline, train_cols):
-    X_enc = pd.get_dummies(input_df[MODEL5_FEATURES], drop_first=True)
-    X_enc = X_enc.reindex(columns=train_cols, fill_value=0)
+    """
+    Manually encode one patient's input to avoid incorrect one-hot encoding
+    when predicting a single patient.
+    """
+
+    row = input_df.iloc[0]
+
+    # Use 0.0 instead of 0 so the DataFrame can store decimal values
+    X_enc = pd.DataFrame(0.0, index=[0], columns=train_cols)
+
+    # Continuous variables
+    continuous_vars = ["LVEF", "Age", "aSI", "FBG", "AIP"]
+
+    for var in continuous_vars:
+        if var in X_enc.columns:
+            X_enc.loc[0, var] = float(row[var])
+
+    # Binary categorical variables
+    binary_vars = [
+        "AHF",
+        "In hospital aldosterone receptor antagonists",
+        "ST segment deviation",
+        "Cardiogenic shock"
+    ]
+
+    for var in binary_vars:
+        col_yes = f"{var}_Yes"
+        if col_yes in X_enc.columns:
+            X_enc.loc[0, col_yes] = 1.0 if row[var] == "Yes" else 0.0
+
+    # Killip class
+    killip_value = row["Killip class"]
+    killip_col = f"Killip class_{killip_value}"
+
+    if killip_col in X_enc.columns:
+        X_enc.loc[0, killip_col] = 1.0
+
+    # eGFR group
+    egfr_value = row["eGFR"]
+    egfr_col = f"eGFR_{egfr_value}"
+
+    if egfr_col in X_enc.columns:
+        X_enc.loc[0, egfr_col] = 1.0
+
     pred_prob = pipeline.predict_proba(X_enc)[:, 1][0]
+
     return pred_prob, X_enc
 
-
 def get_risk_group(pred_prob):
-    if pred_prob < 0.10:
+    if pred_prob < 0.020392:
         return {
-            "group": "低危",
+            "group": "Low Risk",
             "class": "risk-low",
-            "advice": "预测风险较低，可结合临床情况进行常规监测与管理。"
+            "advice": "The predicted risk is relatively low. Routine monitoring and management may be considered according to the clinical context."
         }
-    elif pred_prob < 0.30:
+    elif pred_prob < 0.081862:
         return {
-            "group": "中危",
+            "group": "Intermediate Risk",
             "class": "risk-medium",
-            "advice": "预测风险中等，建议加强病情观察，并结合其他临床指标综合评估。"
+            "advice": "The predicted risk is intermediate. Closer observation and comprehensive clinical assessment are recommended."
         }
     else:
         return {
-            "group": "高危",
+            "group": "High Risk",
             "class": "risk-high",
-            "advice": "预测风险较高，建议重点监测，并根据临床情况考虑更积极的干预策略。"
+            "advice": "The predicted risk is high. Intensive monitoring and more proactive management strategies should be considered according to the clinical context."
         }
 
 
 # ==========================================
-# 10. 预测按钮与结果展示
+# 10. Prediction button and result display
 # ==========================================
 st.divider()
-
-predict_button = st.button("开始预测 MACCE 风险", use_container_width=True)
-
+predict_button = st.button("Predict MACCE Risk", use_container_width=True)
 if predict_button:
     try:
         pred_prob, X_enc = predict_macce_probability(input_df, pipeline, train_cols)
         risk_info = get_risk_group(pred_prob)
-
         result_col1, result_col2 = st.columns([1, 1])
-
         with result_col1:
             st.markdown(
                 f"""
                 <div class="result-card">
-                    <p class="result-title">住院期间 MACCE 预测概率</p>
+                    <p class="result-title">Predicted Probability of In-hospital MACCE</p>
                     <div class="probability-text">{pred_prob * 100:.2f}%</div>
                     <p class="result-desc">
-                        模型估计的住院期间<br>MACCE 发生概率。
+                        Model-estimated probability of<br>in-hospital MACCE.
                     </p>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
-
         with result_col2:
             st.markdown(
                 f"""
                 <div class="result-card">
-                    <p class="result-title">风险分层</p>
+                    <p class="result-title">Risk Stratification</p>
                     <div class="{risk_info["class"]}">{risk_info["group"]}</div>
                     <p class="result-desc">
                         {risk_info["advice"]}
@@ -403,22 +437,21 @@ if predict_button:
                 """,
                 unsafe_allow_html=True
             )
-
-
-
     except Exception as e:
-        st.error("预测失败，请检查输入数据或模型文件。")
+        st.error("Prediction failed. Please check the input data or the model file.")
         st.exception(e)
 # ==========================================
-# 11. 页面底部声明
+# 11. Footer
 # ==========================================
 st.markdown(
     """
     <div class="footer-box">
-        <b>说明：</b><br>
-        本工具基于机器学习模型对 ACS 患者住院期间 MACCE 发生风险进行预测，
-        仅用于科研展示和风险辅助评估，不能替代临床医生的专业判断。
-        实际应用时应结合患者病情、实验室检查、影像学结果及医生经验进行综合决策。
+        <b>Disclaimer:</b><br>
+        This tool uses a machine learning model to estimate the risk of in-hospital MACCE 
+        among patients with acute coronary syndrome. It is intended for research demonstration 
+        and risk-assessment support only and should not replace professional clinical judgment. 
+        In real-world practice, decisions should be made comprehensively based on the patient's 
+        clinical condition, laboratory findings, imaging results, and physician expertise.
     </div>
     """,
     unsafe_allow_html=True
