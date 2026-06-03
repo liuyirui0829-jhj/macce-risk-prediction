@@ -104,56 +104,40 @@ st.markdown(
         color: #6b7280;
         line-height: 1.6;
     }
-    .definition-box {
+   .definition-box {
     background-color: #f9fafb;
-    border: 1.5px solid #991b1b;
-    padding: 20px 28px;
-    border-radius: 16px;
+    border-left: 5px solid #991b1b;
+    border-right: 5px solid #991b1b;
+    padding: 18px 35px;
+    border-radius: 12px;
     margin-bottom: 26px;
-    font-size: 17px;
-    line-height: 1.8;
-    color: #374151;
-}
-    .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-    margin-bottom: 30px;
-}
-
-.info-card {
-    background-color: #ffffff;
-    padding: 26px 30px;
-    border-radius: 18px;
-    box-shadow: 0px 4px 16px rgba(0,0,0,0.06);
-    border: 1px solid #f1f5f9;
-    min-height: 280px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.info-card h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #111827;
-    font-size: 28px;
-    font-weight: 800;
-}
-
-.info-card p {
-    font-size: 18px;
-    color: #374151;
-    line-height: 1.9;
-    margin: 6px 0;
-}
-
-.info-card .note {
-    font-size: 14px;
-    color: #6b7280;
+    font-size: 16px;
     line-height: 1.7;
-    margin-top: 14px;
+    color: #374151;
 }
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .info-card {
+        background-color: white;
+        padding: 20px 24px;
+        border-radius: 14px;
+        box-shadow: 0px 4px 14px rgba(0,0,0,0.06);
+        font-size: 16px;
+        line-height: 1.8;
+        color: #374151;
+    }
+
+    .info-card h3 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        color: #991b1b;
+        font-size: 20px;
+    }
     .footer-box {
         background-color: #fff7ed;
         border-left: 5px solid #f97316;
@@ -193,22 +177,22 @@ st.markdown(
     <div class="info-grid">
         <div class="info-card">
             <h3>Model Information</h3>
-            <p><b>Number of features:</b> 11</p>
-            <p><b>Algorithm:</b> CatBoost</p>
-            <p><b>Predicted outcome:</b> In-hospital MACCE</p>
-            <p><b>Output:</b> Probability of MACCE</p>
+            <b>Number of features:</b> 11<br>
+            <b>Algorithm:</b> CatBoost<br>
+            <b>Predicted outcome:</b> In-hospital MACCE<br>
+            <b>Output:</b> Probability of MACCE
         </div>
 
         <div class="info-card">
             <h3>Risk Stratification</h3>
-            <p><b>Low risk:</b> predicted probability &lt; 2.00%</p>
-            <p><b>Intermediate risk:</b> 2.00% ≤ predicted probability &lt; 8.00%</p>
-            <p><b>High risk:</b> predicted probability ≥ 8.00%</p>
-            <p class="note">
+            <b>Low risk:</b> predicted probability &lt; 2.00%<br>
+            <b>Intermediate risk:</b> 2.00% ≤ predicted probability &lt; 8.00%<br>
+            <b>High risk:</b> predicted probability ≥ 8.00%<br>
+            <span style="font-size:13px; color:#6b7280;">
                 The risk stratification thresholds were determined based on the distribution 
                 of predicted probabilities in the training set and are applied for risk presentation 
                 in this web application.
-            </p>
+            </span>
         </div>
     </div>
     """,
