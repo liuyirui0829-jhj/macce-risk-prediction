@@ -172,32 +172,30 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown(
-    """
-    <div class="info-grid">
-        <div class="info-card">
-            <h3>Model Information</h3>
-            <b>Number of features:</b> 11<br>
-            <b>Algorithm:</b> CatBoost<br>
-            <b>Predicted outcome:</b> In-hospital MACCE<br>
-            <b>Output:</b> Probability of MACCE
-        </div>
+# ==========================================
+# Model information and risk stratification
+# ==========================================
+info_col1, info_col2 = st.columns(2)
 
-        <div class="info-card">
-            <h3>Risk Stratification</h3>
-            <b>Low risk:</b> predicted probability &lt; 2.00%<br>
-            <b>Intermediate risk:</b> 2.00% ≤ predicted probability &lt; 8.00%<br>
-            <b>High risk:</b> predicted probability ≥ 8.00%<br>
-            <span style="font-size:13px; color:#6b7280;">
-                The risk stratification thresholds were determined based on the distribution 
-                of predicted probabilities in the training set and are applied for risk presentation 
-                in this web application.
-            </span>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+with info_col1:
+    with st.container(border=True):
+        st.markdown("### Model Information")
+        st.markdown("**Number of features:** 11")
+        st.markdown("**Algorithm:** CatBoost")
+        st.markdown("**Predicted outcome:** In-hospital MACCE")
+        st.markdown("**Output:** Probability of MACCE")
+
+with info_col2:
+    with st.container(border=True):
+        st.markdown("### Risk Stratification")
+        st.markdown("**Low risk:** predicted probability < 2.00%")
+        st.markdown("**Intermediate risk:** 2.00% ≤ predicted probability < 8.00%")
+        st.markdown("**High risk:** predicted probability ≥ 8.00%")
+        st.caption(
+            "The risk stratification thresholds were determined based on the distribution "
+            "of predicted probabilities in the training set and are applied for risk presentation "
+            "in this web application."
+        )
 # ==========================================
 # 4. Paths and variables
 # ==========================================
