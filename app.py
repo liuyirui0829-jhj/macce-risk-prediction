@@ -115,6 +115,29 @@ st.markdown(
         line-height: 1.7;
         color: #374151;
     }
+        .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .info-card {
+        background-color: white;
+        padding: 20px 24px;
+        border-radius: 14px;
+        box-shadow: 0px 4px 14px rgba(0,0,0,0.06);
+        font-size: 16px;
+        line-height: 1.8;
+        color: #374151;
+    }
+
+    .info-card h3 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        color: #991b1b;
+        font-size: 20px;
+    }
     .footer-box {
         background-color: #fff7ed;
         border-left: 5px solid #f97316;
@@ -145,6 +168,32 @@ st.markdown(
         In-hospital major adverse cardiac and cerebrovascular events (MACCE) 
         were defined as a composite of all-cause death, recurrent myocardial infarction, 
         acute thrombosis, acute heart failure, and stroke.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown(
+    """
+    <div class="info-grid">
+        <div class="info-card">
+            <h3>Model Information</h3>
+            <b>Number of features:</b> 11<br>
+            <b>Algorithm:</b> CatBoost<br>
+            <b>Predicted outcome:</b> In-hospital MACCE<br>
+            <b>Output:</b> Probability of MACCE
+        </div>
+
+        <div class="info-card">
+            <h3>Risk Stratification</h3>
+            <b>Low risk:</b> predicted probability &lt; 2.00%<br>
+            <b>Intermediate risk:</b> 2.00% ≤ predicted probability &lt; 8.00%<br>
+            <b>High risk:</b> predicted probability ≥ 8.00%<br>
+            <span style="font-size:13px; color:#6b7280;">
+                The risk stratification thresholds were determined based on the distribution 
+                of predicted probabilities in the training set and are applied for risk presentation 
+                in this web application.
+            </span>
+        </div>
     </div>
     """,
     unsafe_allow_html=True
@@ -185,26 +234,7 @@ except Exception as e:
     st.error("Failed to load the model. Please check the model file path or the joblib file structure.")
     st.exception(e)
     st.stop()
-# ==========================================
-# 6. Sidebar
-# ==========================================
-with st.sidebar:
-    st.header("Model Information")
-    st.write("**Number of features:** 11")
-    st.write("**Algorithm:** CatBoost")
-    st.write("**Predicted outcome:** In-hospital MACCE")
-    st.write("**Output:** Probability of MACCE")
-    st.divider()
-    st.header("Risk Stratification")
-    st.write("Low risk: predicted probability < 2.0392%")
-    st.write("Intermediate risk: 2.0392% ≤ predicted probability < 8.1862%")
-    st.write("High risk: predicted probability ≥ 8.1862%")
-    st.divider()
-    st.caption(
-        "Note: The risk stratification thresholds were determined based on the distribution "
-        "of predicted probabilities in the training set and are applied for risk presentation "
-        "in this web application."
-    )
+
 # ==========================================
 # 7. Input section
 # ==========================================
@@ -381,13 +411,13 @@ def predict_macce_probability(input_df, pipeline, train_cols):
     return pred_prob, X_enc
 
 def get_risk_group(pred_prob):
-    if pred_prob < 0.020392:
+    if pred_prob < 0.02:
         return {
             "group": "Low Risk",
             "class": "risk-low",
             "advice": "The predicted risk is relatively low. Routine monitoring and management may be considered according to the clinical context."
         }
-    elif pred_prob < 0.081862:
+    elif pred_prob < 0.08:
         return {
             "group": "Intermediate Risk",
             "class": "risk-medium",
