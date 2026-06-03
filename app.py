@@ -1,9 +1,8 @@
-
 import os
 import joblib
 import pandas as pd
 import streamlit as st
-
+from textwrap import dedent
 # ==========================================
 # 1. Page configuration
 # ==========================================
@@ -173,7 +172,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 st.markdown(
-    """
+    dedent("""
     <div class="info-grid">
         <div class="info-card">
             <h3>Model Information</h3>
@@ -195,7 +194,7 @@ st.markdown(
             </span>
         </div>
     </div>
-    """,
+    """),
     unsafe_allow_html=True
 )
 # ==========================================
