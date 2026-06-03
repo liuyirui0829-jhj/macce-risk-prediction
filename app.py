@@ -181,7 +181,6 @@ st.markdown(
             <b>Predicted outcome:</b> In-hospital MACCE<br>
             <b>Output:</b> Probability of MACCE
         </div>
-
         <div class="info-card">
             <h3>Risk Stratification</h3>
             <b>Low risk:</b> predicted probability &lt; 2.00%<br>
